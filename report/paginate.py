@@ -4,7 +4,7 @@ import pymupdf
 
 pdf = pymupdf.open(sys.argv[1])
 texts = [pg.get_text() for pg in pdf]
-start = next(i for i, t in enumerate(texts) if re.search(r"^\s*1\s*\nCHAPTER 1\s*\nINTRODUCTION", t))
+start = next(i for i, t in enumerate(texts) if re.search(r"^CHAPTER 1\s*\n\s*INTRODUCTION", t, re.M))
 def find(pattern, frm=start):
     for i in range(frm, len(texts)):
         if re.search(pattern, texts[i], re.M):

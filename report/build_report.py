@@ -465,9 +465,7 @@ para(f"{m1} ({R1})", 13, align="right", after=4)
 para(f"{m2} ({R2})", 13, align="right")
 
 # ======================================= SECTION 3: abstract & lists, no header
-s3 = new_section()
-unlink(s3)
-clear_header(s3)
+s3 = new_section()          # header (banner + watermark) carries over from section 2
 
 para("ABSTRACT", 14, True, align="center", after=10)
 para(
@@ -590,15 +588,14 @@ table(["Team Member", "Primary Role", "Key Responsibilities"], [
 ], [3.4, 4.0, 8.4], size=11)
 
 # ======================================= SECTION 4: main body with page numbers
-s4 = new_section()
-unlink(s4)
-clear_header(s4)
+s4 = new_section()          # same banner + watermark; page numbers bottom centre from 1
+s4.footer.is_linked_to_previous = False
 pgNumType = OxmlElement("w:pgNumType")
 pgNumType.set(qn("w:start"), "1")
 s4._sectPr.append(pgNumType)
-hp = s4.header.paragraphs[0]
-hp.alignment = WD_ALIGN_PARAGRAPH.CENTER
-page_field(hp)
+fp = s4.footer.paragraphs[0]
+fp.alignment = WD_ALIGN_PARAGRAPH.CENTER
+page_field(fp)
 
 # ---------------------------------------------------------------- CHAPTER 1
 heading_chapter(1, "Introduction", "ch1")
