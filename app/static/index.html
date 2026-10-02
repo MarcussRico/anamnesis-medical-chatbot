@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Anamnesis — medical chatbot</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,400..700,50&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<header class="top">
+  <div class="brand">
+    <span class="mark" aria-hidden="true">
+      <svg viewBox="0 0 32 32" width="30" height="30"><circle cx="16" cy="16" r="14.5" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M5 17h6l2.4-6 4 12 2.6-8 1.6 2H27" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </span>
+    <div>
+      <h1>Anamnesis</h1>
+      <p>A medical chatbot that asks the right next question</p>
+    </div>
+  </div>
+  <div class="top-meta">
+    <span id="kb">41 conditions · 132 symptoms</span>
+    <button id="restart" class="ghost">New consultation</button>
+  </div>
+</header>
+
+<main class="layout">
+  <section class="chat" aria-label="Conversation">
+    <div id="log" class="log"></div>
+    <form id="form" class="composer">
+      <input id="input" autocomplete="off" placeholder="Describe how you feel, e.g. “fever and headache since yesterday, no cough”">
+      <button type="submit">Send</button>
+    </form>
+    <p class="disclaimer">Anamnesis is a learning project, not a doctor. It never invents text: every answer is assembled from its knowledge base and its own probabilities. In an emergency call 108.</p>
+  </section>
+
+  <aside class="panel" aria-label="Live differential">
+    <div class="card">
+      <div class="card-h"><h2>Differential</h2><span id="entropy" class="mono muted">—</span></div>
+      <ol id="diff" class="diff"><li class="empty">Probabilities appear once you describe a symptom.</li></ol>
+    </div>
+    <div class="card" id="triage-card" hidden>
+      <div class="card-h"><h2>Triage</h2></div>
+      <div id="triage"></div>
+    </div>
+    <div class="card">
+      <div class="card-h"><h2>Evidence</h2><span id="qcount" class="mono muted">0 questions</span></div>
+      <ul id="evidence" class="chips"><li class="empty">Nothing recorded yet.</li></ul>
+      <ol id="asked" class="asked"></ol>
+    </div>
+  </aside>
+</main>
+<script src="/static/app.js"></script>
+</body>
+</html>

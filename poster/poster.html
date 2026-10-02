@@ -1,0 +1,94 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,400..800,50&family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#f6f0e4;--card:#fffdf8;--ink:#1f2a36;--ink2:#46525f;--rule:#e2d7c3;--acc:#a33b2b;--pru:#2b4a6f;--soft:#f3e1da}
+*{box-sizing:border-box;margin:0;padding:0}
+body{width:1684px;height:1190px;background:var(--paper);font:15px/1.45 "Instrument Sans",sans-serif;color:var(--ink);padding:26px 30px;position:relative;overflow:hidden}
+body::after{content:"";position:absolute;right:-120px;top:-160px;width:620px;height:620px;border-radius:50%;background:radial-gradient(circle,#ecdcc2 0%,transparent 65%);z-index:0}
+.wrap{position:relative;z-index:1;height:100%;display:flex;flex-direction:column;gap:14px}
+header{display:grid;grid-template-columns:auto 1fr auto;gap:22px;align-items:center;border-bottom:2px solid var(--ink);padding-bottom:14px}
+header img{height:74px}
+.t h1{font:700 50px/1 Fraunces,serif;font-variation-settings:"SOFT" 50;letter-spacing:-.01em}
+.t h1 span{color:var(--acc)}
+.t p{font:500 19px/1.3 "Instrument Sans";color:var(--ink2);margin-top:6px}
+.t .meta{font-size:13.5px;color:var(--ink2);margin-top:6px}
+.who{text-align:right;font-size:14px;line-height:1.5}
+.who b{font-size:16px}
+.grid{flex:1;display:grid;grid-template-columns:1fr 1.25fr 1fr;gap:14px;min-height:0}
+.col{display:flex;flex-direction:column;gap:14px;min-height:0}
+.card{background:var(--card);border:1px solid var(--rule);border-radius:14px;padding:13px 16px}
+.card h2{font:700 19px Fraunces,serif;margin-bottom:6px;display:flex;gap:8px;align-items:baseline}
+.card h2 i{font:600 12px "JetBrains Mono";color:var(--acc);font-style:normal}
+.card p,.card li{font-size:14px;color:var(--ink2)}
+.card ul{padding-left:17px}
+.card li{margin:2px 0}
+.big{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:6px}
+.big div{background:var(--paper);border-radius:10px;padding:8px 10px}
+.big b{display:block;font:700 28px Fraunces,serif;color:var(--acc);line-height:1.05}
+.big span{font-size:12px;color:var(--ink2)}
+.hero{background:var(--ink);color:#f3ece0;border:none}
+.hero h2{color:#fff}
+.hero p{color:#d9d1c3}
+.hero .big div{background:#2c3a4a}
+.hero .big b{color:#f2b8a8}
+.hero .big span{color:#cfc6b8}
+img.fig{width:100%;border-radius:8px;border:1px solid var(--rule);display:block}
+table{width:100%;border-collapse:collapse;font-size:13px;margin-top:4px}
+td,th{padding:4px 6px;border-bottom:1px solid var(--rule);text-align:left}
+th{font-weight:600}
+td.n{text-align:right;font-family:"JetBrains Mono";font-size:12.5px}
+tr.me td{color:var(--acc);font-weight:600}
+.eq{font:500 13px "JetBrains Mono";background:var(--paper);border-radius:8px;padding:6px 8px;margin:6px 0;color:var(--ink)}
+footer{display:flex;justify-content:space-between;font-size:13px;color:var(--ink2);border-top:1px solid var(--rule);padding-top:8px}
+</style></head><body><div class="wrap">
+<header>
+  <img src="../report/assets/p1_x71.jpeg">
+  <div class="t">
+    <h1>ANAMNESIS <span>— a medical chatbot that asks the right next question</span></h1>
+    <p>Information-gain driven symptom triage over 41 diseases and 132 symptoms</p>
+    <div class="meta">Project-Based Learning · Machine Learning · Department of Computer Science and Engineering · Chennai Institute of Technology · 2026–2027</div>
+  </div>
+  <div class="who"><b>Sai Charan A</b> · 2104251040844<br><b>Ashfaq Muhammed A</b> · 2104251040096<br>Mentor: Ms. S. Raja Priya, M.E.</div>
+</header>
+<div class="grid">
+  <div class="col">
+    <div class="card"><h2><i>01</i>Problem</h2>
+      <p>Symptom checkers name the right condition first only about a third of the time [Semigran 2015]. Student projects on the standard Kaggle dataset claim 100% — but patients start a conversation with two symptoms, not a 132-field form.</p></div>
+    <div class="card"><h2><i>02</i>Leakage audit — our first finding</h2>
+      <div class="big"><div><b>304</b><span>unique rows in 4,920</span></div><div><b>100%</b><span>of official test rows already in training</span></div><div><b>61.8%</b><span>LR accuracy from 2 symptoms on unseen profiles</span></div></div>
+      <p style="margin-top:8px">The famous 100% is memorisation. We split by unique profile, so no test patient has a copy in training.</p></div>
+    <div class="card"><h2><i>03</i>Objectives</h2><ul>
+      <li>Repair the evaluation protocol (grouped split)</li>
+      <li>Measure accuracy under partial evidence</li>
+      <li>Ask each follow-up question by expected information gain</li>
+      <li>Lay-language NLU with negation; warning-sign triage</li>
+      <li>No generated text — nothing can be hallucinated</li></ul></div>
+    <div class="card"><h2><i>04</i>Iterations</h2>
+      <table><tr><th>Version</th><th>From 2 symptoms</th><th class="n">Top-1</th></tr>
+      <tr><td>1 · Logistic regression</td><td>one-shot</td><td class="n">61.8%</td></tr>
+      <tr><td>2 · Masked-augmented LR</td><td>one-shot</td><td class="n">79.7%</td></tr>
+      <tr class="me"><td>Final · Evidence model + EIG</td><td>+ 4.0 questions</td><td class="n">96.3%</td></tr></table></div>
+  </div>
+  <div class="col">
+    <div class="card"><h2><i>05</i>Method</h2>
+      <img class="fig" src="../figures/fig_loop.png">
+      <div class="eq">p(d | E) ∝ p(d) · Π<sub>present</sub> q<sub>ds</sub> · Π<sub>absent</sub> (1 − q<sub>ds</sub>)  — unknown symptoms drop out</div>
+      <p>Each turn scores all 132 unasked symptoms by expected entropy reduction (0.18 ms) and asks the best one; stops at 90% confidence, abstains below 50%.</p></div>
+    <div class="card"><h2><i>06</i>The chatbot</h2><img class="fig" src="../figures/ui_2_result.png"></div>
+  </div>
+  <div class="col">
+    <div class="card hero"><h2><i style="color:#f2b8a8">07</i>Results — 1,230 simulated consultations, unseen profiles</h2>
+      <div class="big"><div><b>96.3%</b><span>top-1 accuracy</span></div><div><b>98.7%</b><span>top-3 accuracy</span></div><div><b>4.0</b><span>questions on average</span></div></div>
+      <p style="margin-top:8px">3% noisy answers · ECE 0.035 · NLU F1 0.927 on 50 lay-language utterances</p></div>
+    <div class="card"><h2><i>08</i>Why information gain</h2><img class="fig" src="../figures/fig_questions.png">
+      <table><tr><th>Policy</th><th class="n">Top-1</th><th class="n">Questions</th></tr>
+      <tr><td>Random question</td><td class="n">79.4%</td><td class="n">7.9</td></tr>
+      <tr><td>Most-common symptom</td><td class="n">90.4%</td><td class="n">5.2</td></tr>
+      <tr class="me"><td>Expected information gain</td><td class="n">96.3%</td><td class="n">4.0</td></tr></table></div>
+    <div class="card"><h2><i>09</i>Conclusion & future scope</h2>
+      <p>Well-chosen questions recover the accuracy that partial information takes away. Next: clinician review, seasonal prevalence priors (dengue in monsoon), Tamil input, real-user pilot.</p></div>
+  </div>
+</div>
+<footer><span>Stack: Python · NumPy · scikit-learn · FastAPI · HTML/CSS/JS · Playwright</span><span>github.com/MarcussRico/anamnesis-medical-chatbot</span><span>Not a diagnostic device — in an emergency call 108</span></footer>
+</div></body></html>
