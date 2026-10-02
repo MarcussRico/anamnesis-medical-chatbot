@@ -2,7 +2,5 @@
 __pycache__/
 *.pyc
 .DS_Store
-report/*.pdf
-report/*.docx
 report/pages*.json
 ~$*
