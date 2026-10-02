@@ -699,7 +699,7 @@ para("The idea of choosing the next observation to maximise expected information
      "defined the information an experiment provides as the expected reduction in Shannon entropy [13]. In "
      "automatic diagnosis, Wei et al. [7] framed symptom inquiry as a task-oriented dialogue learned with deep "
      "reinforcement learning and showed that an agent that asks about additional symptoms outperforms a classifier "
-     "given only the patient’s self-reported symptoms (accuracy 0.65 against 0.59). Peng et al. [6] (REFUEL) "
+     "given only the patient’s self-reported symptoms (diagnosis success rate 0.65, against 0.59 accuracy for the classifier). Peng et al. [6] (REFUEL) "
      "improved such agents with reward shaping and feature rebuilding to reach higher accuracy in fewer turns on "
      "simulated patients. These agents need many thousands of training episodes and offer little insight into why "
      "a question was asked.")
@@ -712,7 +712,7 @@ h2("2.2 Summary Table", "s2.2")
 table(["Ref.", "Approach / Model", "Dataset", "Reported Result"], [
     ("[1]", "23 commercial symptom checkers", "45 standardised patient vignettes", "Correct diagnosis first in 34%; appropriate triage in 57%"),
     ("[4]", "Survey of leakage in ML-based science", "294 papers, 17 fields", "Duplicates across train/test among the leading causes of inflated results"),
-    ("[7]", "Deep-RL symptom inquiry dialogue", "Medical dialogue corpus (MZ)", "Accuracy 0.65 vs 0.59 for a classifier on self-reported symptoms"),
+    ("[7]", "Deep-RL symptom inquiry dialogue", "Medical dialogue corpus (MZ)", "Success rate 0.65 vs 0.59 for a classifier on self-reported symptoms"),
     ("[6]", "REFUEL: RL with reward shaping", "Simulated patients (SymCAT)", "Higher accuracy in fewer inquiry turns than the RL baseline"),
     ("[8]", "NegEx negation detection", "Discharge summaries", "Specificity 94.5%, PPV 84.5%"),
     ("[2]", "Naive Bayes and other learners for diagnosis", "Several clinical datasets", "NB competitive with complex learners and easy to explain"),
@@ -884,7 +884,7 @@ table(["Component", "Configuration"], [
     ("Masked-augmented LR (Iter. 2)", "20 masked copies per profile, keep-rate U(0.2, 0.9); max_iter = 3000"),
     ("Baselines (Iter. 1)", "LR (max_iter 2000), RF (200 trees), SVM (RBF), Bernoulli NB, DT, k-NN (k = 5)"),
     ("Simulated patient", "2 volunteered symptoms; truthful answers with 3% flip noise (0%, 5%, 10% in sweep)"),
-    ("NLU", "Lay lexicon (≈300 phrases) + char_wb 3–5-gram TF-IDF, cosine ≥ 0.72; clause-scoped negation"),
+    ("NLU", "Lay lexicon (279 phrases) + char_wb 3–5-gram TF-IDF, cosine ≥ 0.72; clause-scoped negation"),
 ], [4.6, 11.2], size=10.5)
 caption("Table 4.1 — Model and Dialogue Configuration")
 page_break()
