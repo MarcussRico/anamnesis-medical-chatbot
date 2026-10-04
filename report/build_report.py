@@ -417,7 +417,7 @@ sig.alignment = WD_TABLE_ALIGNMENT.CENTER
 blocks = [
     [("SIGNATURE", True), ("Dr. S. PAVITHRA, M.E., Ph.D.,", False), ("Professor and Head,", True),
      ("Dept. of Computer Science and Engineering", False), ("Chennai Institute of Technology,", False), ("Chennai – 69.", False)],
-    [("SIGNATURE", True), ("Ms. S. RAJA PRIYA, M.E.,", False), ("MENTOR", True), ("Assistant Professor", True),
+    [("SIGNATURE", True), ("R. POORNIMA LAKSHMI, M.E.,", False), ("MENTOR", True), ("Assistant Professor", True),
      ("Dept. of Computer Science and Engineering", False), ("Chennai Institute of Technology,", False), ("Chennai – 69.", False)],
 ]
 fix_widths(sig, [7.9, 7.9])
@@ -456,8 +456,8 @@ for t in [
     "We are very proud to render our thanks to our Principal **Dr. A. RAMESH M.E., Ph.D.,** for the facilities and the encouragement given by him toward the progress and completion of our project.",
     "We would like to express special thanks and gratitude to our Dean **Dr. V. SRINIVASA RAO M.E., Ph.D.,** who has been a key source of motivation to us throughout the completion of our course and project work.",
     "We proudly render our immense gratitude to the Head of the Department **Dr. S. PAVITHRA M.E., Ph.D.,** for her effective leadership, encouragement and guidance throughout the project.",
-    "We would like to extend our thanks to the Project Co-ordinator **Ms. S. RAJA PRIYA M.E.,** Department of Computer Science and Engineering, for their valuable suggestions throughout this project.",
-    "We wish to acknowledge the help received from our class advisors **Ms. S. RAJA PRIYA M.E.,** and **Mr. R. RAHUL M.TECH.,** of the Department of Computer Science and Engineering for their valuable suggestions and support toward the successful completion of the project.",
+    "We would like to extend our thanks to the Project Co-ordinator **R. POORNIMA LAKSHMI, M.E., Assistant Professor,** Department of Computer Science and Engineering, for their valuable suggestions throughout this project.",
+    "We wish to acknowledge the help received from our class advisors **Dr. G. IRIN LORETTA, M.E., Assistant Professor,** and **S. E. NEELA KANDAN, M.Tech., Assistant Professor,** of the Department of Computer Science and Engineering and others for providing valuable suggestions and for the successful completion of the project.",
 ]:
     para(t, 12, after=10, line=1.5)
 para("", after=40)
