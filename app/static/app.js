@@ -297,6 +297,28 @@ function restart() {
   $("#input").focus();
 }
 
+// ------------------------------------------------------------------ theme
+// Follows the system until the toggle is used; the choice is remembered on this device.
+const darkQuery = matchMedia("(prefers-color-scheme: dark)");
+const themeNow = () => document.documentElement.dataset.theme || (darkQuery.matches ? "dark" : "light");
+const SUN = `<svg viewBox="0 0 24 24" class="size-[18px]" aria-hidden="true"><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`;
+const MOON = `<svg viewBox="0 0 24 24" class="size-[18px]" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>`;
+function paintThemeButton() {
+  const dark = themeNow() === "dark", label = dark ? "Switch to light theme" : "Switch to dark theme";
+  const btn = $("#theme");
+  btn.innerHTML = dark ? SUN : MOON;
+  btn.setAttribute("aria-label", label);
+  btn.title = label;
+}
+$("#theme").onclick = () => {
+  const next = themeNow() === "dark" ? "light" : "dark";
+  document.documentElement.dataset.theme = next;
+  try { localStorage.setItem("theme", next); } catch {}
+  paintThemeButton();
+};
+darkQuery.addEventListener("change", paintThemeButton);
+paintThemeButton();
+
 // Touch has no "leave", so any tap elsewhere or a scroll dismisses the chart tooltip.
 const hideTip = (e) => { if (!e.target.closest?.("#trail")) $("#tip").classList.add("hidden"); };
 document.addEventListener("pointerdown", hideTip);

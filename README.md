@@ -204,7 +204,7 @@ Or use the live site, **https://anamnesis-theta.vercel.app**. It's the same app;
 - **Triage**: emergency (red), see a doctor within 24 hours (amber) or routine (green).
 - **Findings**: what you have (+) and don't have (−), plus every question asked with its information value.
 
-The three example openers on the welcome screen are the demo scenarios below, so you can click them instead of typing.
+The three example openers on the welcome screen are the demo scenarios below, so you can click them instead of typing. The sun/moon button in the header switches between light and dark themes (it follows your system setting until you use it); for a projector, the light theme is easier to read.
 
 Click **New consultation** before each scenario.
 

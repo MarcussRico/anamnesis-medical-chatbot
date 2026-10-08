@@ -10,12 +10,12 @@
   --color-card: #fbfcfa;
   --color-ink: #10231c;        /* green-black ink */
   --color-ink-2: #43534b;
-  --color-muted: #66736b;
+  --color-muted: #5f6c64;
   --color-rule: #d5dbd3;
   --color-scrub: #1f5c4a;      /* surgical-scrub green */
   --color-scrub-deep: #164536;
   --color-scrub-soft: #e3ede8;
-  --color-iodine: #a35a14;     /* see a doctor soon */
+  --color-iodine: #995311;     /* see a doctor soon */
   --color-iodine-soft: #f7ecdf;
   --color-alarm: #b42318;      /* emergency */
   --color-alarm-soft: #fbe8e5;
@@ -38,17 +38,39 @@
   .font-display { font-variation-settings: "wdth" 88; }
 }
 
+/* Dark theme: warm charcoal, ivory ink and a sage scrub green (not mint-on-black). Its own steps, chosen and contrast-checked against the dark surfaces (all text pairs
+   >= 4.5:1), not an inversion. Follows the system unless the header toggle sets data-theme. */
+:root { color-scheme: light; --grid-line: rgb(16 35 28 / 0.045); --glow: rgb(31 92 74 / 0.10); --grain-blend: multiply; --grain: 0.05; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --color-paper: #121411; --color-card: #191c18; --color-ink: #ebe8df; --color-ink-2: #bdb9ae;
+    --color-muted: #97938a; --color-rule: #2c2f2a; --color-scrub: #83b898; --color-scrub-deep: #a3d0b4;
+    --color-scrub-soft: #1f2b24; --color-iodine: #e2a45e; --color-iodine-soft: #2e2518;
+    --color-alarm: #f07a68; --color-alarm-soft: #351c19;
+    --grid-line: rgb(235 232 223 / 0.03); --glow: rgb(131 184 152 / 0.07); --grain-blend: overlay; --grain: 0.08;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --color-paper: #121411; --color-card: #191c18; --color-ink: #ebe8df; --color-ink-2: #bdb9ae;
+  --color-muted: #97938a; --color-rule: #2c2f2a; --color-scrub: #83b898; --color-scrub-deep: #a3d0b4;
+  --color-scrub-soft: #1f2b24; --color-iodine: #e2a45e; --color-iodine-soft: #2e2518;
+  --color-alarm: #f07a68; --color-alarm-soft: #351c19;
+  --grid-line: rgb(235 232 223 / 0.03); --glow: rgb(131 184 152 / 0.07); --grain-blend: overlay; --grain: 0.08;
+}
+
 /* Chart-paper grid and a little grain, so the page reads as a clinical record rather than a flat fill. */
 .chart-paper {
   background-color: var(--color-paper);
   background-image:
-    radial-gradient(1100px 600px at 85% -10%, rgb(31 92 74 / 0.10), transparent 60%),
-    linear-gradient(rgb(16 35 28 / 0.045) 1px, transparent 1px),
-    linear-gradient(90deg, rgb(16 35 28 / 0.045) 1px, transparent 1px);
+    radial-gradient(1100px 600px at 85% -10%, var(--glow), transparent 60%),
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
   background-size: auto, 28px 28px, 28px 28px;
 }
 .chart-paper::after {
-  content: ""; position: fixed; inset: 0; pointer-events: none; opacity: 0.05; mix-blend-mode: multiply;
+  content: ""; position: fixed; inset: 0; pointer-events: none; opacity: var(--grain); mix-blend-mode: var(--grain-blend);
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
