@@ -191,7 +191,7 @@
         "mean_questions": 4.021138211382114
       }
     },
-    "ms_per_question_eig": 0.1760159928455579,
+    "ms_per_question_eig": 0.17540303614248087,
     "calibration": {
       "ece": 0.035170662102372796,
       "reliability": [
@@ -300,15 +300,15 @@
       "negation_accuracy": 0.5833333333333334
     },
     "+ lay-term lexicon": {
-      "precision": 0.956989247311828,
-      "recall": 0.8240740740740741,
-      "f1": 0.8855721393034827,
+      "precision": 0.9587628865979382,
+      "recall": 0.8611111111111112,
+      "f1": 0.9073170731707317,
       "negation_accuracy": 0.9166666666666666
     },
     "+ fuzzy char n-gram (final)": {
-      "precision": 0.9181818181818182,
+      "precision": 0.9619047619047619,
       "recall": 0.9351851851851852,
-      "f1": 0.9266055045871558,
+      "f1": 0.9483568075117371,
       "negation_accuracy": 0.9166666666666666
     },
     "n_utterances": 50,

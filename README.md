@@ -23,7 +23,7 @@ ANAMNESIS works the way a doctor does: **listen, ask the most useful question, d
 | 🎯 **Asks the best next question** | Picks the yes/no question with the highest **expected information gain** (in bits) | **96.3%** correct after about **4.0 questions** (random questions: 79.4% after 7.9) |
 | 🔍 **Found a data leak** | The dataset's 4,920 rows are only **304 unique**, and **all 41 official test rows also appear in training** | Explains the "100% accuracy" everyone else reports |
 | 🧠 **Reasons from partial symptoms** | A Bayesian model that only uses symptoms it **knows** about | Works from 2 symptoms, with no form to fill in |
-| 💬 **Understands plain language** | "my head is pounding", "throwing up", "no fever" | F1 **0.52 → 0.93**; negation accuracy **58% → 92%** |
+| 💬 **Understands plain language** | "my head is pounding", "throwing up", "no fever" | F1 **0.52 → 0.95**; negation accuracy **58% → 92%** |
 | 📊 **Its confidence can be trusted** | When it says 95%, it's right about 95% of the time | Calibration error (ECE) **0.035** |
 | 🛑 **Knows when not to answer** | **Abstains** below 50% confidence; **red-flag alert** for danger signs | Raises an emergency alert as soon as chest pain is mentioned |
 | 🚫 **Cannot make anything up** | **No generative AI model** anywhere. Every sentence is built from data | Asking about a disease it doesn't know gets a refusal, not a guess |
@@ -152,8 +152,8 @@ Patients don't say `headache=1, high_fever=0`. They say *"my head is pounding an
 
 The NLU works in three layers:
 1. **Exact symptom names**, e.g. "joint pain".
-2. **A hand-built lay-term lexicon**: "throwing up" → vomiting, "loose motions" → diarrhoea, "head is pounding" → headache, "short of breath" → breathlessness. It has 279 everyday phrases covering 92 symptoms.
-3. **Fuzzy matching** with character n-gram TF-IDF, for phrasings and spellings the lexicon misses.
+2. **A hand-built lay-term lexicon**: "throwing up" → vomiting, "loose motions" → diarrhoea, "head is pounding" → headache, "short of breath" → breathlessness. It has 379 everyday phrases covering 97 symptoms, including Indian-English terms like "loose motions", "giddy" and "gas problem".
+3. **Fuzzy matching** with character n-gram TF-IDF, for phrasings and spellings the lexicon misses. A single word may only fuzzy-match a single-word phrase (so a typo like "headake" still works), never part of a longer one. Without that rule, "burning" matched "burning up" (fever) and "can't breathe properly" matched "can't speak properly" (slurred speech, which set off a false stroke alarm).
 
 **Negation scope:** "no", "not", "without", "don't have" and similar cues flip every symptom after them in the same clause to **absent**.
 
@@ -162,8 +162,8 @@ Measured on 50 hand-labelled patient sentences (108 symptom mentions):
 | NLU version | Precision | Recall | F1 | Negation accuracy |
 |---|---|---|---|---|
 | Exact names only | 97.4% | 35.2% | 0.52 | 58% |
-| + lay-term lexicon | 95.7% | 82.4% | 0.89 | 92% |
-| **+ fuzzy n-gram (final)** | 91.8% | **93.5%** | **0.93** | **92%** |
+| + lay-term lexicon | 95.9% | 86.1% | 0.91 | 92% |
+| **+ fuzzy n-gram (final)** | **96.2%** | **93.5%** | **0.95** | **92%** |
 
 ---
 
@@ -245,7 +245,7 @@ Click **New consultation** before each scenario.
 2. **`figures/fig_questions.png`**: "Information gain is the most accurate with the fewest questions."
 3. **`figures/fig_calibration.png`**: "Its confidence can be trusted."
 
-> 💡 **Demo tips:** type clean English with no deliberate typos. The fuzzy matcher handles small variations, but heavy misspellings like "headake and feevr" aren't recognised. Avoid vague words like "feverish"; say "fever" or "high fever".
+> 💡 **Demo tips:** type clean English. Small typos are fine, but heavy misspellings like "nausia" or "fatige" aren't recognised. Stick to the inputs above, which have all been tested against the live app.
 
 ---
 
@@ -265,6 +265,9 @@ Uncertainty, measured in the same unit computers use. With 41 equally likely dis
 
 **How did you test it without real patients?**
 1,230 simulated consultations. Each patient is a symptom profile the model **never trained on** (profile-grouped split, 5 random seeds), starts with 2 symptoms, and gives **3% wrong answers**. We also ran 0%, 5% and 10% noise. All of it is deterministic and reproducible with `python -m experiments.evaluate`.
+
+**But those patients come from the same dataset. How accurate is it on realistic cases?**
+We also wrote 35 textbook cases ourselves, independently of the dataset, opened them in plain English, and answered every question as a real patient would. It named the right disease in **29 of 35 (83%)** and gave up on 5 rather than guess. It named a wrong disease **only once**, and that was Rheumatoid Arthritis → Osteoarthritis, a closely related condition. The misses (Malaria, Typhoid, Gastroenteritis, Migraine, Hepatitis A) come from the public dataset's narrow symptom lists. For example, its Migraine has no nausea and its Gastroenteritis has no stomach pain, which is why real clinical data is our first item of future scope.
 
 **What if the patient lies or makes a mistake?**
 The model has a built-in 3% "slip" probability, so a single wrong answer can't eliminate the right disease. At 10% wrong answers it's still 87% accurate.
