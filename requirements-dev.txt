@@ -1,0 +1,7 @@
+# Experiments, figures, screenshots and the report. The app itself only needs requirements.txt.
+-r requirements.txt
+matplotlib>=3.9
+playwright>=1.45
+python-docx>=1.1
+pymupdf>=1.24
+pillow>=10

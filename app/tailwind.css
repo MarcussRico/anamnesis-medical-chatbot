@@ -1,0 +1,57 @@
+/* Tailwind source for app/static/app.css. Rebuild after editing the UI:
+   npm i --no-save tailwindcss@4 @tailwindcss/cli@4   (once; no package.json, so Vercel stays a Python project)
+   npx tailwindcss -i app/tailwind.css -o app/static/app.css --minify */
+@import "tailwindcss" source(none);
+@source "./static/index.html";
+@source "./static/app.js";
+
+@theme {
+  --color-paper: #f2f4f1;      /* record-card paper */
+  --color-card: #fbfcfa;
+  --color-ink: #10231c;        /* green-black ink */
+  --color-ink-2: #43534b;
+  --color-muted: #66736b;
+  --color-rule: #d5dbd3;
+  --color-scrub: #1f5c4a;      /* surgical-scrub green */
+  --color-scrub-deep: #164536;
+  --color-scrub-soft: #e3ede8;
+  --color-iodine: #a35a14;     /* see a doctor soon */
+  --color-iodine-soft: #f7ecdf;
+  --color-alarm: #b42318;      /* emergency */
+  --color-alarm-soft: #fbe8e5;
+
+  --font-display: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Public Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+
+  --animate-rise: rise 0.35s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: none; }
+  }
+}
+
+@layer base {
+  html { -webkit-text-size-adjust: 100%; }
+  body { background-color: var(--color-paper); color: var(--color-ink); }
+  :focus-visible { outline: 2px solid var(--color-scrub); outline-offset: 2px; border-radius: 6px; }
+  .font-display { font-variation-settings: "wdth" 88; }
+}
+
+/* Chart-paper grid and a little grain, so the page reads as a clinical record rather than a flat fill. */
+.chart-paper {
+  background-color: var(--color-paper);
+  background-image:
+    radial-gradient(1100px 600px at 85% -10%, rgb(31 92 74 / 0.10), transparent 60%),
+    linear-gradient(rgb(16 35 28 / 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(16 35 28 / 0.045) 1px, transparent 1px);
+  background-size: auto, 28px 28px, 28px 28px;
+}
+.chart-paper::after {
+  content: ""; position: fixed; inset: 0; pointer-events: none; opacity: 0.05; mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}

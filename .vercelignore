@@ -1,0 +1,11 @@
+.venv
+__pycache__
+*.pyc
+report
+poster
+figures
+results
+experiments
+scripts
+node_modules
+app/tailwind.css

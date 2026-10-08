@@ -4,53 +4,86 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Anamnesis — medical chatbot</title>
+<meta name="description" content="Describe your symptoms in your own words. Anamnesis asks the yes/no question that narrows things down most, and explains every result.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%231f5c4a'/%3E%3Cpath d='M6 21h5l3-9 4 12 3-7h5' fill='none' stroke='%23fbfcfa' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,400..700,50&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/static/style.css">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,400..800&family=IBM+Plex+Mono:wght@400;500&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/static/app.css">
 </head>
-<body>
-<header class="top">
-  <div class="brand">
-    <span class="mark" aria-hidden="true">
-      <svg viewBox="0 0 32 32" width="30" height="30"><circle cx="16" cy="16" r="14.5" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M5 17h6l2.4-6 4 12 2.6-8 1.6 2H27" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+<body class="chart-paper font-sans text-ink antialiased min-h-dvh">
+
+<header class="mx-auto flex max-w-[1360px] items-center justify-between gap-6 px-4 pt-5 pb-4 sm:px-8 sm:pt-7">
+  <div class="flex items-center gap-3.5">
+    <span class="grid size-11 shrink-0 place-items-center rounded-xl bg-scrub text-card shadow-[0_6px_16px_-8px_rgb(31_92_74/0.8)]" aria-hidden="true">
+      <svg viewBox="0 0 32 32" class="size-7"><path d="M4 17.5h5.5l3-8.5 4.5 14 3.2-8 1.6 2.5H28" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </span>
     <div>
-      <h1>Anamnesis</h1>
-      <p>A medical chatbot that asks the right next question</p>
+      <h1 class="font-display text-[26px] leading-none font-bold tracking-tight">Anamnesis</h1>
+      <p class="mt-1 text-[13.5px] text-ink-2">Describe your symptoms. It asks the question that narrows things down most.</p>
     </div>
   </div>
-  <div class="top-meta">
-    <span id="kb">41 conditions · 132 symptoms</span>
-    <button id="restart" class="ghost">New consultation</button>
+  <div class="flex items-center gap-4">
+    <span class="hidden text-[13px] text-muted md:block">41 conditions · 132 symptoms</span>
+    <button id="restart" type="button" class="rounded-full border border-ink/15 bg-card px-4 py-2 text-[14px] font-semibold text-ink shadow-sm transition hover:border-scrub hover:text-scrub">New consultation</button>
   </div>
 </header>
 
-<main class="layout">
-  <section class="chat" aria-label="Conversation">
-    <div id="log" class="log"></div>
-    <form id="form" class="composer">
-      <input id="input" autocomplete="off" placeholder="Describe how you feel, e.g. “fever and headache since yesterday, no cough”">
-      <button type="submit">Send</button>
+<main class="mx-auto grid max-w-[1360px] gap-5 px-4 pb-8 sm:px-8 lg:grid-cols-[minmax(0,1fr)_420px] lg:gap-6">
+
+  <!-- Conversation -->
+  <section aria-label="Consultation" class="flex min-h-[78dvh] flex-col overflow-hidden rounded-[22px] border border-rule bg-card shadow-[0_24px_60px_-36px_rgb(16_35_28/0.35)] lg:h-[calc(100dvh-118px)] lg:min-h-[600px]">
+    <div class="flex items-center justify-between gap-3 border-b border-rule px-5 py-3 sm:px-7">
+      <p class="text-[13px] font-semibold text-ink-2">Consultation</p>
+      <p id="mini" class="truncate font-mono text-[12px] text-muted lg:hidden"></p>
+    </div>
+    <div id="log" class="flex-1 space-y-5 overflow-y-auto px-5 py-6 sm:px-7" aria-live="polite"></div>
+    <form id="form" class="border-t border-rule bg-card px-4 pt-3 pb-2 sm:px-6">
+      <div class="flex items-center gap-2 rounded-2xl border border-ink/15 bg-paper/60 p-1.5 pl-4 transition focus-within:border-scrub focus-within:bg-card">
+        <label for="input" class="sr-only">Describe your symptoms</label>
+        <input id="input" autocomplete="off" class="min-w-0 flex-1 bg-transparent py-2 text-[15.5px] text-ink placeholder:text-muted focus:outline-none focus-visible:outline-none" placeholder="e.g. fever and headache since yesterday, no cough">
+        <button type="submit" class="rounded-xl bg-scrub px-5 py-2.5 text-[14.5px] font-semibold text-card transition hover:bg-scrub-deep">Send</button>
+      </div>
+      <p class="px-1 pt-2 pb-1 text-[12px] leading-snug text-muted">A student project, not a doctor. Every reply is built from medical reference tables and the model's own probabilities; nothing is generated. In an emergency, call <a href="tel:108" class="font-semibold text-alarm underline-offset-2 hover:underline">108</a>.</p>
     </form>
-    <p class="disclaimer">Anamnesis is a learning project, not a doctor. It never invents text: every answer is assembled from its knowledge base and its own probabilities. In an emergency call 108.</p>
   </section>
 
-  <aside class="panel" aria-label="Live differential">
-    <div class="card">
-      <div class="card-h"><h2>Differential</h2><span id="entropy" class="mono muted">—</span></div>
-      <ol id="diff" class="diff"><li class="empty">Probabilities appear once you describe a symptom.</li></ol>
-    </div>
-    <div class="card" id="triage-card" hidden>
-      <div class="card-h"><h2>Triage</h2></div>
-      <div id="triage"></div>
-    </div>
-    <div class="card">
-      <div class="card-h"><h2>Evidence</h2><span id="qcount" class="mono muted">0 questions</span></div>
-      <ul id="evidence" class="chips"><li class="empty">Nothing recorded yet.</li></ul>
-      <ol id="asked" class="asked"></ol>
-    </div>
+  <!-- Case board -->
+  <aside aria-label="Case board" class="space-y-4 lg:sticky lg:top-6 lg:h-[calc(100dvh-118px)] lg:overflow-y-auto lg:pr-1 lg:self-start">
+
+    <section class="rounded-[22px] border border-rule bg-card p-5">
+      <div class="flex items-baseline justify-between gap-3">
+        <h2 class="font-display text-[19px] font-bold">Uncertainty</h2>
+        <p class="font-mono text-[13px] text-ink-2"><span id="bits" class="text-[22px] font-medium text-ink">5.36</span> bits</p>
+      </div>
+      <p id="trail-caption" class="mt-1 text-[13px] leading-snug text-ink-2">With nothing known, all 41 conditions are equally likely. Each answer should bring this down.</p>
+      <div class="relative mt-3">
+        <svg id="trail" viewBox="0 0 380 150" class="block h-auto w-full overflow-visible" role="img" aria-label="Uncertainty after each answer"></svg>
+        <div id="tip" class="pointer-events-none absolute z-10 hidden max-w-[220px] rounded-lg bg-ink px-2.5 py-1.5 text-[12px] leading-snug text-card shadow-lg"></div>
+      </div>
+    </section>
+
+    <section class="rounded-[22px] border border-rule bg-card p-5">
+      <div class="flex items-baseline justify-between gap-3">
+        <h2 class="font-display text-[19px] font-bold">Differential <abbr title="differential diagnosis" class="ml-1 font-mono text-[12px] font-normal text-muted no-underline">DDx</abbr></h2>
+        <span class="text-[12px] text-muted">top 5 of 41</span>
+      </div>
+      <ol id="diff" class="mt-3 space-y-3"></ol>
+    </section>
+
+    <section id="triage-card" class="hidden rounded-[22px] border p-5"></section>
+
+    <section class="rounded-[22px] border border-rule bg-card p-5">
+      <div class="flex items-baseline justify-between gap-3">
+        <h2 class="font-display text-[19px] font-bold">Findings</h2>
+        <span id="qcount" class="font-mono text-[12px] text-muted">0 questions</span>
+      </div>
+      <ul id="evidence" class="mt-3 flex flex-wrap gap-1.5"></ul>
+      <ol id="asked" class="mt-4 space-y-1.5"></ol>
+    </section>
   </aside>
 </main>
+
 <script src="/static/app.js"></script>
 </body>
 </html>

@@ -1,7 +1,6 @@
-"""FastAPI server: one in-memory Session per browser tab."""
+"""FastAPI server. Stateless: each request carries its conversation, so any instance can answer."""
 from __future__ import annotations
 
-import uuid
 from pathlib import Path
 
 from fastapi import FastAPI
@@ -13,11 +12,10 @@ from anamnesis.engine import Session, resources
 
 STATIC = Path(__file__).parent / "static"
 app = FastAPI(title="Anamnesis")
-SESSIONS: dict[str, Session] = {}
 
 
 class ChatIn(BaseModel):
-    session_id: str | None = None
+    session: dict | None = None
     text: str
 
 
@@ -28,9 +26,9 @@ def warm() -> None:
 
 @app.post("/api/chat")
 def chat(body: ChatIn) -> dict:
-    sid = body.session_id if body.session_id in SESSIONS else uuid.uuid4().hex
-    session = SESSIONS.setdefault(sid, Session())
-    return {"session_id": sid, **session.handle(body.text)}
+    session = Session.from_dict(body.session)
+    reply = session.handle(body.text)
+    return {"session": session.to_dict(), **reply}
 
 
 @app.get("/api/health")

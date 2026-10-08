@@ -73,6 +73,26 @@ class Session:
     done: bool = False
     transcript: list[dict] = field(default_factory=list)
 
+    # ------------------------------------------------------------------ persistence
+    def to_dict(self) -> dict:
+        return {"state": self.state.tolist(), "pending": self.pending, "asked": self.asked,
+                "done": self.done, "transcript": self.transcript}
+
+    @classmethod
+    def from_dict(cls, d: dict | None) -> "Session":
+        """Rebuilds a conversation sent back by the client; anything malformed starts a fresh one."""
+        n = len(resources()[0].symptoms)
+        try:
+            state = np.array(d["state"], dtype=int)
+            pending = d["pending"]
+            if state.shape != (n,) or not np.isin(state, (UNKNOWN, ABSENT, PRESENT)).all():
+                raise ValueError
+            if pending is not None and not (isinstance(pending, int) and 0 <= pending < n):
+                raise ValueError
+            return cls(state, pending, list(d["asked"]), bool(d["done"]), list(d["transcript"]))
+        except (TypeError, KeyError, ValueError):
+            return cls()
+
     # ------------------------------------------------------------------ helpers
     def _snapshot(self, model: EvidenceModel) -> dict:
         post = model.posterior(self.state)

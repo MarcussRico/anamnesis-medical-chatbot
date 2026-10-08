@@ -6,6 +6,8 @@ Project-Based Learning (Machine Learning) · Department of Computer Science and 
 Chennai Institute of Technology · 2026–2027
 **Sai Charan A** (2104251040844) · **Ashfaq Muhammed A** (2104251040096)
 
+🌐 **Live:** https://anamnesis-theta.vercel.app
+
 > ⚕️ Not a diagnostic device. In an emergency, call **108**.
 
 ---
@@ -29,7 +31,7 @@ ANAMNESIS works the way a doctor does: **listen, ask the most useful question, d
 | 🚫 **Cannot make anything up** | **No generative AI model** anywhere. Every sentence is built from data | Asking about a disease it doesn't know gets a refusal, not a guess |
 | ⚡ **Fast** | Choosing each question takes **0.18 ms** | Instant replies on a laptop |
 
-**41 diseases · 132 symptoms · ~1,000 lines of Python · FastAPI + vanilla-JS chat UI**
+**41 diseases · 132 symptoms · ~1,000 lines of Python · FastAPI + Tailwind CSS chat UI · deployed on Vercel**
 
 ---
 
@@ -194,8 +196,15 @@ cd ~/projects/anamnesis
 .venv/bin/uvicorn app.server:app --port 8765
 ```
 Open **http://localhost:8765**. If it says the port is already in use, the server is already running, so just open the page.
+Or use the live site, **https://anamnesis-theta.vercel.app**. It's the same app; the first message after a few idle minutes takes a few seconds while the server wakes up, so open it once before the review.
 
-**Screen layout:** the chat is on the left. On the right is the **live differential**: the top-5 diseases with probability bars, an **uncertainty meter in bits**, the **symptom chips** (green = yes, red = no) and the **list of questions asked**, each with its information value.
+**Screen layout:** the consultation is on the left. On the right is the case board:
+- **Uncertainty**: a step chart showing how many bits of uncertainty are left after each answer (hover a point to see which answer caused the drop). *This is the chart to point at.*
+- **Differential (DDx)**: the top 5 of 41 conditions, with bars that re-sort live.
+- **Triage**: emergency (red), see a doctor within 24 hours (amber) or routine (green).
+- **Findings**: what you have (+) and don't have (−), plus every question asked with its information value.
+
+The three example openers on the welcome screen are the demo scenarios below, so you can click them instead of typing.
 
 Click **New consultation** before each scenario.
 
@@ -261,7 +270,7 @@ True, it's a simplification. In return we get a model that can handle **unknown*
 It's a good one-shot guesser, but it's **discriminative**: it can't tell you P(patient says yes | disease), so it **can't choose questions**. Our model is generative, so it can. After asking questions, it reaches 96.3%.
 
 **What is "bits" / entropy?**
-Uncertainty, measured in the same unit computers use. With 41 equally likely diseases the uncertainty is log₂ 41 ≈ 5.4 bits. Each good yes/no question removes up to 1 bit. The meter on screen shows it falling, for example 2.55 → 2.36 → 0.22 in the Dengue demo.
+Uncertainty, measured in the same unit computers use. With 41 equally likely diseases the uncertainty is log₂ 41 ≈ 5.4 bits. Each good yes/no question removes up to 1 bit. The uncertainty chart shows it falling, for example 5.36 → 2.55 → 2.35 → 0.22 in the Dengue demo.
 
 **How did you test it without real patients?**
 1,230 simulated consultations. Each patient is a symptom profile the model **never trained on** (profile-grouped split, 5 random seeds), starts with 2 symptoms, and gives **3% wrong answers**. We also ran 0%, 5% and 10% noise. All of it is deterministic and reproducible with `python -m experiments.evaluate`.
@@ -287,13 +296,23 @@ No, and the app says so. It's a pre-consultation tool: it helps the patient desc
 
 ```bash
 python -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt
+pip install -r requirements.txt           # the app only
 uvicorn app.server:app --port 8765        # open http://localhost:8765
+```
+
+The server is stateless: the browser sends the conversation back with each message, so it runs on Vercel's serverless functions (`vercel deploy --prod`) without losing a consultation between requests.
+
+The UI is styled with Tailwind CSS v4. After editing `app/static/index.html` or `app.js`, rebuild the stylesheet:
+
+```bash
+npm i --no-save tailwindcss@4 @tailwindcss/cli@4    # once
+npx tailwindcss -i app/tailwind.css -o app/static/app.css --minify
 ```
 
 ### Reproduce every number and figure
 
 ```bash
+pip install -r requirements-dev.txt       # matplotlib, Playwright, report tools
 python -m experiments.evaluate            # writes results/results.json and figures/*.png (~90 s)
 python scripts/diagrams.py                # architecture + loop diagrams
 python -m playwright install chromium && python scripts/screenshots.py   # needs the server running
@@ -303,7 +322,7 @@ python -m playwright install chromium && python scripts/screenshots.py   # needs
 
 ```
 anamnesis/   knowledge.py (data + tables)  model.py (evidence model + EIG)  nlu.py (lay language + negation)  engine.py (dialogue, triage, red flags)
-app/         server.py (FastAPI) + static/ (chat UI with live differential panel)
+app/         server.py (FastAPI, stateless) + static/ (chat UI and case board) + tailwind.css (style source)
 experiments/ evaluate.py (every experiment)  nlu_testset.py (50 labelled utterances)
 data/raw/    Kaggle disease–symptom data + description / precaution / severity tables
 results/     results.json (every number in this README)
@@ -311,7 +330,7 @@ figures/     charts, diagrams and UI screenshots
 report/      PBL report (PDF + DOCX)    poster/  poster
 ```
 
-**Tech:** Python · NumPy · pandas · scikit-learn · FastAPI · Uvicorn · vanilla JS/CSS · matplotlib · Playwright
+**Tech:** Python · NumPy · pandas · scikit-learn · FastAPI · Uvicorn · Tailwind CSS · vanilla JS · matplotlib · Playwright · Vercel
 
 Data: Kaggle "Disease Prediction Using Machine Learning" (kaushil268), plus the description, precaution and severity tables from github.com/itachi9604/healthcare-chatbot.
 Every number above comes from `results/results.json`.
